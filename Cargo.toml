@@ -19,6 +19,6 @@ default-features = false
 version = "0.2.10"
 
 [dependencies.syn]
-version = "0.15.3"
+version = "0.15.4"
 default-features = false
 features = ["full", "parsing", "printing", "clone-impls", "extra-traits", "visit", "visit-mut", "fold"]

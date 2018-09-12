@@ -14,7 +14,7 @@ pub struct FullFile {
     pub file: syn::File,
 }
 
-#[derive(Clone, Debug, Hash, StructOpt)]
+#[derive(Clone, Debug, Hash, PartialEq, Eq, Default, StructOpt)]
 #[structopt(name = "salmagundi")]
 /// Rewrites data type definitions to rearrange in-memory layout.
 struct CmdOpts {
