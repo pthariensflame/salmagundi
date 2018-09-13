@@ -8,6 +8,9 @@ edition = "2018"
 version = "0.20.0"
 features = ["clang_6_0"]
 
+[dependencies.enumset]
+version = "0.3.11"
+
 [dependencies.rayon]
 version = "1.0.2"
 

@@ -1,3 +1,4 @@
+use enumset::*;
 use quote::*;
 use rayon::prelude::*;
 use std::{
@@ -21,9 +22,25 @@ struct CmdOpts {
     #[structopt(value_name = "IN_FILE", parse(from_os_str))]
     /// A path to the file to read from; if not present or "-", use standard input.
     in_file_raw: Option<ffi::OsString>,
-    #[structopt(value_name = "OUT_FILE", parse(from_os_str))]
+    #[structopt(
+        short = "o",
+        long = "out",
+        value_name = "OUT_FILE",
+        parse(from_os_str)
+    )]
     /// A path to the file to write to; if not present or "-", use standard output.
     out_file_raw: Option<ffi::OsString>,
+    #[structopt(short = "P", long = "passthrough")]
+    /// Pass the input through unrandomized.
+    passthrough: bool,
+    #[structopt(
+        short = "e",
+        long = "exclude",
+        value_name = "IDENTIFIER",
+        parse(try_from_str = "syn::parse_str")
+    )]
+    /// Types to exclude in the randomization.
+    exclude: Vec<syn::Ident>,
 }
 
 fn cmd_input_to_path(s: ffi::OsString) -> Option<path::PathBuf> {
@@ -38,12 +55,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let CmdOpts {
         in_file_raw,
         out_file_raw,
+        passthrough,
+        exclude,
     } = CmdOpts::from_args();
+    eprintln!("{:?}", exclude);
 
     let stdin;
     let mut reader: Box<dyn Read + Sync> =
         if let Some(path) = in_file_raw.into_iter().flat_map(cmd_input_to_path).nth(0) {
-            Box::<fs::File>::new(fs::File::open(path.canonicalize()?)?)
+            let canon_path = path.canonicalize()?;
+            eprintln!("{} ==> {}", path.display(), canon_path.display());
+            Box::<fs::File>::new(fs::File::open(canon_path)?)
         } else {
             stdin = io::stdin();
             Box::<io::StdinLock>::new(stdin.lock())
@@ -58,12 +80,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     drop(file_contents);
 
-    // TODO: implement file alteration
+    if !passthrough {
+        // TODO: implement file alteration
+    }
 
     let stdout;
     let mut writer: Box<dyn Write + Sync> =
         if let Some(path) = out_file_raw.into_iter().flat_map(cmd_input_to_path).nth(0) {
-            Box::<fs::File>::new(fs::File::create(path.canonicalize()?)?)
+            let canon_path = path.canonicalize()?;
+            eprintln!("{} ==> {}", path.display(), canon_path.display());
+            Box::<fs::File>::new(fs::File::create(canon_path)?)
         } else {
             stdout = io::stdout();
             Box::<io::StdoutLock>::new(stdout.lock())
