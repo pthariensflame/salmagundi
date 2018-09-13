@@ -58,14 +58,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         passthrough,
         exclude,
     } = CmdOpts::from_args();
-    eprintln!("{:?}", exclude);
 
     let stdin;
     let mut reader: Box<dyn Read + Sync> =
         if let Some(path) = in_file_raw.into_iter().flat_map(cmd_input_to_path).nth(0) {
-            let canon_path = path.canonicalize()?;
-            eprintln!("{} ==> {}", path.display(), canon_path.display());
-            Box::<fs::File>::new(fs::File::open(canon_path)?)
+            Box::<fs::File>::new(fs::File::open(path)?)
         } else {
             stdin = io::stdin();
             Box::<io::StdinLock>::new(stdin.lock())
@@ -87,9 +84,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let stdout;
     let mut writer: Box<dyn Write + Sync> =
         if let Some(path) = out_file_raw.into_iter().flat_map(cmd_input_to_path).nth(0) {
-            let canon_path = path.canonicalize()?;
-            eprintln!("{} ==> {}", path.display(), canon_path.display());
-            Box::<fs::File>::new(fs::File::create(canon_path)?)
+            Box::<fs::File>::new(fs::File::create(path)?)
         } else {
             stdout = io::stdout();
             Box::<io::StdoutLock>::new(stdout.lock())
