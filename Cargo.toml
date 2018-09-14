@@ -8,9 +8,6 @@ edition = "2018"
 version = "0.20.0"
 features = ["clang_6_0"]
 
-[dependencies.enumset]
-version = "0.3.11"
-
 [dependencies.quote]
 version = "0.6.8"
 default-features = false
