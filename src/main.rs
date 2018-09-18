@@ -1,6 +1,4 @@
 use quote::*;
-use rand::prelude::*;
-use rayon::prelude::*;
 use std::{
     ffi, fs,
     io::{self, prelude::*},
@@ -18,7 +16,7 @@ pub struct FullFile {
 #[derive(Clone, Debug, Hash, PartialEq, Eq, Default, StructOpt)]
 #[structopt(name = "salmagundi")]
 /// Rewrites data type definitions to rearrange in-memory layout.
-struct CmdOpts {
+struct CmdParams {
     #[structopt(value_name = "IN_FILE", parse(from_os_str))]
     /// A path to the file to read from; if not present or "-", use standard input.
     in_file_raw: Option<ffi::OsString>,
@@ -33,14 +31,19 @@ struct CmdOpts {
     #[structopt(short = "P", long = "passthrough")]
     /// Pass the input through unrandomized.
     passthrough: bool,
-    #[structopt(
-        short = "e",
-        long = "exclude",
-        value_name = "IDENTIFIER",
-        parse(try_from_str = "syn::parse_str")
-    )]
-    /// Types to exclude in the randomization.
-    exclude: Vec<syn::Ident>,
+    #[structopt(flatten)]
+    cmd_opts: CmdOpts,
+}
+
+#[derive(Clone, Debug, Hash, PartialEq, Eq, Default, StructOpt)]
+struct CmdOpts {
+    #[structopt(short = "e", long = "exclude", value_name = "IDENTIFIER")]
+    /// Type names to exclude in the randomization; accepts extended regular expressions with unicode support.
+    exclude: Vec<String>,
+}
+
+pub struct Options {
+    exclude: regex::RegexSet,
 }
 
 fn cmd_input_to_path(s: ffi::OsString) -> Option<path::PathBuf> {
@@ -51,13 +54,20 @@ fn cmd_input_to_path(s: ffi::OsString) -> Option<path::PathBuf> {
     }
 }
 
+fn finish_parsing_options(CmdOpts { exclude }: CmdOpts) -> Result<(), Box<dyn std::error::Error>> {
+    Options {
+        exclude: regex::RegexSet::new(exclude),
+    }
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let CmdOpts {
+    let CmdParams {
         in_file_raw,
         out_file_raw,
         passthrough,
-        exclude,
-    } = CmdOpts::from_args();
+        cmd_opts,
+    } = CmdParams::from_args();
+    let options = finish_parsing_options(cmd_opts)?;
 
     let stdin;
     let mut reader: Box<dyn Read + Sync> =
@@ -71,14 +81,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     reader.read_to_end(&mut file_contents_raw)?;
     drop(reader);
     let file_contents = String::from_utf8(file_contents_raw)?;
-    let full_file = FullFile {
+    let mut full_file = FullFile {
         has_bom: file_contents.starts_with("\u{FEFF}"),
         file: syn::parse_file(&file_contents)?,
     };
     drop(file_contents);
 
     if !passthrough {
-        // TODO: implement file alteration
+        rust::alter_file(&mut full_file.file, options)?;
     }
 
     let stdout;

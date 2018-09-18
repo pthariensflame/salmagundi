@@ -18,6 +18,9 @@ version = "0.5.5"
 [dependencies.rayon]
 version = "1.0.2"
 
+[dependencies.regex]
+version = "1.0.5"
+
 [dependencies.structopt]
 version = "0.2.10"
 
