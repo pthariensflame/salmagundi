@@ -1,5 +1,10 @@
+#![feature(int_to_from_bytes)]
+
 use quote::*;
+use rand::{prelude::*, prng::XorShiftRng};
+use regex::RegexSet;
 use std::{
+    error::Error,
     ffi, fs,
     io::{self, prelude::*},
     path,
@@ -38,12 +43,20 @@ struct CmdParams {
 #[derive(Clone, Debug, Hash, PartialEq, Eq, Default, StructOpt)]
 struct CmdOpts {
     #[structopt(short = "e", long = "exclude", value_name = "IDENTIFIER")]
-    /// Type names to exclude in the randomization; accepts extended regular expressions with unicode support.
+    /// Type paths to exclude in the randomization; accepts extended regular expressions with unicode support.
     exclude: Vec<String>,
+    #[structopt(short = "S", long = "seed", value_name = "SEED")]
+    /// Numeric seed to use for reproducible randomization.
+    seed: Option<u128>,
+    #[structopt(short = "R", long = "print-seed")]
+    /// Print the seed used for randomization to standard error.
+    print_seed: bool,
 }
 
+#[derive(Clone, Debug)]
 pub struct Options {
-    exclude: regex::RegexSet,
+    pub exclude: RegexSet,
+    pub rng: XorShiftRng,
 }
 
 fn cmd_input_to_path(s: ffi::OsString) -> Option<path::PathBuf> {
@@ -54,13 +67,26 @@ fn cmd_input_to_path(s: ffi::OsString) -> Option<path::PathBuf> {
     }
 }
 
-fn finish_parsing_options(CmdOpts { exclude }: CmdOpts) -> Result<(), Box<dyn std::error::Error>> {
-    Options {
-        exclude: regex::RegexSet::new(exclude),
-    }
+fn finish_parsing_options(
+    CmdOpts {
+        exclude,
+        seed,
+        print_seed,
+    }: CmdOpts,
+) -> Result<Options, Box<dyn Error>> {
+    Ok(Options {
+        exclude: RegexSet::new(exclude)?,
+        rng: XorShiftRng::from_seed({
+            let s = seed.unwrap_or_else(|| random());
+            if print_seed {
+                eprintln!("seed = {}", s);
+            }
+            s.to_be_bytes()
+        }),
+    })
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let CmdParams {
         in_file_raw,
         out_file_raw,
