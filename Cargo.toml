@@ -4,20 +4,21 @@ version = "0.1.0"
 authors = ["Alexander Ronald Altman <alexanderaltman@me.com>"]
 edition = "2018"
 
-[dependencies.clang]
-version = "0.20.0"
-features = ["clang_6_0"]
+[build-dependencies.pkg-config]
+version = "0.3.14"
+optional = true
+
+[dependencies.either]
+version = "1.5.0"
 
 [dependencies.quote]
 version = "0.6.8"
 default-features = false
+optional = true
 
 [dependencies.rand]
 version = "0.5.5"
 features = ["i128_support"]
-
-[dependencies.rayon]
-version = "1.0.2"
 
 [dependencies.regex]
 version = "1.0.5"
@@ -26,6 +27,12 @@ version = "1.0.5"
 version = "0.2.10"
 
 [dependencies.syn]
-version = "0.15.4"
+version = "0.15.8"
 default-features = false
 features = ["full", "parsing", "printing", "clone-impls", "extra-traits", "visit", "visit-mut", "fold"]
+optional = true
+
+[features]
+default = ["cfamily-support", "rust-support"]
+cfamily-support = ["pkg-config"]
+rust-support = ["quote", "syn"]
