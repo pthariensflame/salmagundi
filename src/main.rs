@@ -150,7 +150,7 @@ fn finish_parsing_options(
         exclude: RegexSet::new(exclude)?,
         include: RegexSet::new(include)?,
         rng: XorShiftRng::from_seed({
-            let s = seed.unwrap_or_else(|| random());
+            let s = seed.unwrap_or_else(random);
             if print_seed {
                 eprintln!("seed = {}", s);
             }
@@ -214,7 +214,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             Box::<io::StdoutLock>::new(stdout.lock())
         };
     if full_file.has_bom {
-        write!(writer, "{}", "\u{FEFF}");
+        write!(writer, "\u{FEFF}");
     }
     // I wish this could use "format_args!" but there were borrowck errors.  :(
     let full_output = full_file.file.map_left(|mut t| {
