@@ -24,10 +24,10 @@ features = ["i128_support"]
 version = "1.0.5"
 
 [dependencies.structopt]
-version = "0.2.10"
+version = "0.2.11"
 
 [dependencies.syn]
-version = "0.15.8"
+version = "0.15.9"
 default-features = false
 features = ["full", "parsing", "printing", "clone-impls", "extra-traits", "visit", "visit-mut", "fold"]
 optional = true
