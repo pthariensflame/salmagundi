@@ -30,9 +30,7 @@ pub enum Language {
 }
 
 impl Default for Language {
-    fn default() -> Self {
-        Language::Rust
-    }
+    fn default() -> Self { Language::Rust }
 }
 
 /// Potentially-supported C-like source languages.
@@ -49,9 +47,7 @@ pub enum CLikeLanguage {
 }
 
 impl Default for CLikeLanguage {
-    fn default() -> Self {
-        CLikeLanguage::C
-    }
+    fn default() -> Self { CLikeLanguage::C }
 }
 
 pub fn try_parse_language(s: &str) -> Result<Language, Box<dyn Error>> {
@@ -80,7 +76,8 @@ pub fn try_parse_language(s: &str) -> Result<Language, Box<dyn Error>> {
 /// Rewrites data type definitions to rearrange in-memory layout.
 struct CmdParams {
     #[structopt(value_name = "IN_FILE", parse(from_os_str))]
-    /// A path to the file to read from; if not present or "-", use standard input.
+    /// A path to the file to read from; if not present or "-", use standard
+    /// input.
     in_file_raw: Option<ffi::OsString>,
     #[structopt(
         short = "o",
@@ -88,7 +85,8 @@ struct CmdParams {
         value_name = "OUT_FILE",
         parse(from_os_str)
     )]
-    /// A path to the file to write to; if not present or "-", use standard output.
+    /// A path to the file to write to; if not present or "-", use standard
+    /// output.
     out_file_raw: Option<ffi::OsString>,
     #[structopt(short = "P", long = "passthrough")]
     /// Pass the input through unrandomized.
@@ -110,10 +108,15 @@ struct CmdParams {
 #[derive(Clone, Debug, Hash, PartialEq, Eq, Default, StructOpt)]
 struct CmdOpts {
     #[structopt(short = "e", long = "exclude", value_name = "IDENTIFIER")]
-    /// Type path(s) to exclude in the randomization even if they would otherwise be excluded; takes precedence over the explicit "include" option; accepts extended regular expressions with unicode support.
+    /// Type path(s) to exclude in the randomization even if they would
+    /// otherwise be excluded; takes precedence over the explicit "include"
+    /// option; accepts extended regular expressions with unicode support.
     exclude: Vec<String>,
     #[structopt(short = "i", long = "include", value_name = "IDENTIFIER")]
-    /// Type path(s) to include in the randomization even if they would implicitly be excluded; takes precedence over any implicit exclusions, but not over the explicit "exclude" option; accepts extended regular expressions with unicode support.
+    /// Type path(s) to include in the randomization even if they would
+    /// implicitly be excluded; takes precedence over any implicit exclusions,
+    /// but not over the explicit "exclude" option; accepts extended regular
+    /// expressions with unicode support.
     include: Vec<String>,
     #[structopt(short = "S", long = "seed", value_name = "SEED")]
     /// Numeric seed to use for reproducible randomization.

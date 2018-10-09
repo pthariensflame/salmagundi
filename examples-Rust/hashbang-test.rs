@@ -2,9 +2,15 @@
 
 //! A test.
 
-struct Test {
+struct Test1 {
     x: u8,
-    y: u8,
+    y: u16,
+}
+
+enum Test2 {
+    VarA { v: u32, w: u64 },
+    VarB(String, Vec<bool>),
+    VarC,
 }
 
 fn main() {}

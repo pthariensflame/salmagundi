@@ -25,6 +25,7 @@ version = "1.0.5"
 
 [dependencies.structopt]
 version = "0.2.11"
+features = ["suggestions", "color", "wrap_help"]
 
 [dependencies.syn]
 version = "0.15.9"

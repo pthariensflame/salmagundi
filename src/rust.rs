@@ -65,4 +65,41 @@ impl VisitMut for TypeRandomizationVisitor {
             struct_item.attrs.extend(self.repr_c_attr.iter().cloned());
         }
     }
+
+    fn visit_item_enum_mut(&mut self, enum_item: &mut syn::ItemEnum) {
+        use syn::{punctuated::Punctuated, *};
+        let mut altered = false;
+        let enum_name = enum_item.ident.to_string();
+        let explicitly_excluded = self.options.exclude.is_match(&enum_name);
+        let explicitly_included = self.options.include.is_match(&enum_name);
+        let implicitly_excluded = enum_item
+            .attrs
+            .iter()
+            .any(|attr| attr.path == self.repr_attr_path);
+        drop(enum_name);
+        if !explicitly_excluded && (explicitly_included || !implicitly_excluded) {
+            let mut new_variants = Punctuated::new();
+            mem::swap(&mut enum_item.variants, &mut new_variants);
+            let mut variants_vec: Vec<Variant> =
+                new_variants.into_pairs().map(|p| p.into_value()).collect();
+            for variant in variants_vec.iter_mut() {
+                if let Fields::Named(fields) = &mut variant.fields {
+                    let mut new_fields = Punctuated::new();
+                    mem::swap(&mut fields.named, &mut new_fields);
+                    let mut fields_vec: Vec<Field> =
+                        new_fields.into_pairs().map(|p| p.into_value()).collect();
+                    self.options.rng.shuffle(&mut fields_vec);
+                    fields.named.extend(fields_vec);
+                }
+            }
+            self.options.rng.shuffle(&mut variants_vec);
+            enum_item.variants.extend(variants_vec);
+            altered = true;
+        }
+        if altered {
+            // TODO: this isn't necessarily the best thing to do here; consider other
+            // options
+            enum_item.attrs.extend(self.repr_c_attr.iter().cloned());
+        }
+    }
 }
