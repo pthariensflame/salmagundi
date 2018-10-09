@@ -72,8 +72,8 @@ pub fn try_parse_language(s: &str) -> Result<Language, Box<dyn Error>> {
 }
 
 #[derive(Clone, Debug, Hash, PartialEq, Eq, Default, StructOpt)]
-#[structopt(name = "salmagundi")]
 /// Rewrites data type definitions to rearrange in-memory layout.
+#[structopt(name = "salmagundi")]
 struct CmdParams {
     #[structopt(value_name = "IN_FILE", parse(from_os_str))]
     /// A path to the file to read from; if not present or "-", use standard
@@ -162,14 +162,14 @@ fn finish_parsing_options(
     })
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn inner_main(cmd_params: CmdParams) -> Result<(), Box<dyn Error>> {
     let CmdParams {
         in_file_raw,
         out_file_raw,
         passthrough,
         language,
         cmd_opts,
-    } = CmdParams::from_args();
+    } = cmd_params;
     let options = finish_parsing_options(cmd_opts)?;
 
     // TODO: this is ugly; give the user a better error.
@@ -230,5 +230,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     writeln!(writer, "{}", full_output);
     drop(writer);
 
+    Ok(())
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    inner_main(CmdParams::from_args())?;
     Ok(())
 }
