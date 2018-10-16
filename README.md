@@ -1,4 +1,5 @@
 # `salmagundi`
+[![Build Status](https://travis-ci.com/pthariensflame/salmagundi.svg?branch=master)](https://travis-ci.com/pthariensflame/salmagundi)
 
 A tool to rewrite data type definitions to rearrange in-memory layout.
 ***Very work-in-progress!***
