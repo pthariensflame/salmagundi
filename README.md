@@ -12,7 +12,7 @@ with [rustup](https://rustup.rs).
 From the main project folder, use the command `cargo run -- [ARGS]` or `cargo run --release -- [ARGS]` to
 build and run the executable in one step (in debug mode or release mode, respectively), where `[ARGS]` is the
 arguments to pass to `salmagundi`.  The flag `--help` will display the
-available usage patterns of `salmagundi`.  For now, dont attempt to run the binary directly; you may get linker issues that way (see #1).
+available usage patterns of `salmagundi`.  For now, dont attempt to run the binary directly; you may get linker issues that way (see https://github.com/pthariensflame/salmagundi/issues/1).
 
 ## Usage
 
