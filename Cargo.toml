@@ -34,6 +34,6 @@ features = ["full", "parsing", "printing", "clone-impls", "extra-traits", "visit
 optional = true
 
 [features]
-default = ["cfamily-support", "rust-support"]
+default = ["rust-support"]
 cfamily-support = ["pkg-config"]
 rust-support = ["quote", "syn"]
