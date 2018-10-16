@@ -15,3 +15,7 @@ also use `cargo run -- [ARGS]` or `cargo run --release -- [ARGS]` to
 build and run the executable in one step, where `[ARGS]` is the
 arguments to pass to `salmagundi`.  The flag `--help` will display the
 available usage patterns of `salmagundi`.
+
+## License
+
+`salmagundi` is licensed under the terms of the MIT License or the Apache License 2.0, at your choosing.
