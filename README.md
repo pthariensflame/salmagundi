@@ -1,6 +1,7 @@
-# salmagundi
+# `salmagundi`
 
 A tool to rewrite data type definitions to rearrange in-memory layout.
+***Very work-in-progress!***
 
 ## How to build and run from source
 
