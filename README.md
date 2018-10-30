@@ -29,24 +29,33 @@ USAGE:
 FLAGS:
     -h, --help           Prints help information
     -P, --passthrough    Pass the input through unrandomized.
-    -R, --print-seed     Print the seed used for randomization to standard error.
+    -R, --print-seed     Print the seed used for randomization to standard
+                         error.
     -V, --version        Prints version information
 
 OPTIONS:
-    -e, --exclude <IDENTIFIER>...    Type path(s) to exclude in the randomization even if they would
-                                     otherwise be excluded; takes precedence over the explicit "include"
-                                     option; accepts extended regular expressions with unicode support.
-    -i, --include <IDENTIFIER>...    Type path(s) to include in the randomization even if they would
-                                     implicitly be excluded; takes precedence over any implicit
-                                     exclusions, but not over the explicit "exclude" option; accepts
-                                     extended regular expressions with unicode support.
-    -L, --language <LANGUAGE>        Source language of the code to transform. [default: default]
-    -o, --out <OUT_FILE>             A path to the file to write to; if not present or "-", use standard
-                                     output.
-    -S, --seed <SEED>                Numeric seed to use for reproducible randomization.
+    -e, --exclude <IDENTIFIER>...
+            Type path(s) to exclude in the randomization even if they would
+            otherwise be excluded; takes precedence over the explicit "include"
+            option; accepts extended regular expressions with unicode support.
+    -i, --include <IDENTIFIER>...
+            Type path(s) to include in the randomization even if they would
+            implicitly be excluded; takes precedence over any implicit
+            exclusions, but not over the explicit "exclude" option; accepts
+            extended regular expressions with unicode support.
+    -L, --language <LANGUAGE>
+            Source language of the code to transform. [default: default]
+
+    -o, --out <OUT_FILE>
+            A path to the file to write to; if not present or "-", use standard
+            output.
+    -S, --seed <SEED>
+            Numeric seed to use for reproducible randomization.
+
 
 ARGS:
-    <IN_FILE>    A path to the file to read from; if not present or "-", use standard input.
+    <IN_FILE>    A path to the file to read from; if not present or "-",
+                 use standard input.
 ```
 
 ## License
