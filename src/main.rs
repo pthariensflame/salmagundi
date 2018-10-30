@@ -97,7 +97,7 @@ struct CmdParams {
         parse(try_from_str = "try_parse_language"),
         value_name = "LANGUAGE",
         case_insensitive = true,
-        default_value = ""
+        default_value = "default"
     )]
     /// Source language of the code to transform.
     language: Language,
