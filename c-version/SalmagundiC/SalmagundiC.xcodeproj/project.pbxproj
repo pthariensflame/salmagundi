@@ -6,10 +6,15 @@
 	objectVersion = 52;
 	objects = {
 
+/* Begin PBXFileReference section */
+		11206F1D23B959D9003648A8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		11206F1223B9451D003648A8 = {
 			isa = PBXGroup;
 			children = (
+				11206F1D23B959D9003648A8 /* main.cpp */,
 			);
 			sourceTree = "<group>";
 		};
