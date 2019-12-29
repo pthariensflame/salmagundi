@@ -36,7 +36,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1130;
-				ORGANIZATIONNAME = "Alexander Ronald Altman";
+				ORGANIZATIONNAME = "University of Illinois";
 				TargetAttributes = {
 					11206F1723B9451D003648A8 = {
 						CreatedOnToolsVersion = 11.3;
